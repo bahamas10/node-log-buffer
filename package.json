@@ -1,0 +1,21 @@
+{
+  "name": "log-buffer",
+  "description": "Buffer calls to console.log, console.warn, etc. for high performance logging",
+  "version": "0.0.0",
+  "author": "Dave Eddy <dave@daveeddy.com> (http://www.daveeddy.com)",
+  "contributors": [],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bahamas10/node-log-buffer.git"
+  },
+  "scripts": {
+    "test": "for f in tests/*; do echo \"$f\"; node \"$f\"; done; echo 'passed!'; exit 0"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "keywords": [ "console", "console.log", "log", "logger", "timestamp", "buffer" ]
+}
