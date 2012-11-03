@@ -10,8 +10,9 @@ Calls to `console.log`, `console.error`, etc. are synchronous, and as such,
 will block the event loop while the data is being written to a file, terminal,
 socket, pipe, etc.
 
-This module provides a buffer for all calls to these functions, and flushes
-them when the buffers exceed a certain size (8k by default).
+This module provides a seamless, drop-in buffer for all calls to these
+functions, and flushes them when the buffers exceed a certain size (8k by
+default).
 
 See [Known Issues](#known-issues) for timing concerns with this module.
 
@@ -69,6 +70,8 @@ Counting to a million, logging each iteration, with buffering (8k)
     user    0m1.920s
     sys     0m0.027s
 
+
+A **2.4x** increase
 
 Install
 ------
