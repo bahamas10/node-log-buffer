@@ -121,8 +121,8 @@ Counting to a million, logging each iteration to `/dev/null`, with buffering (8k
 1,000,000 write(2) syscalls are fired without buffering, whereas only 841 are fired
 when the output is buffered.
 
-A **1,189x*** decrease in the number of syscalls; 1 buffered syscall for every 1,189
-unbuffered syscalls.
+A **1,189x** decrease in the number of syscalls; **1** buffered syscall for
+every **1,189** unbuffered syscalls.
 
 Install
 ------
