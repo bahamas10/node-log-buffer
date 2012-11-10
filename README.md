@@ -40,9 +40,17 @@ require('log-buffer')(4096); // buffer will flush at 4k
 ```
 
 This module also exposes the `flush` function used to flush all buffers, so
-if you would like you can manually invoke a flush.  Also, you can
-specify an interval to automatically flush all buffers so logs don't get held
-in memory indefinitely.
+if you would like you can manually invoke a flush.
+
+``` js
+var logbuffer = require('log-buffer');
+console.log('hello'); // buffered
+console.log('world'); // buffered
+logbuffer.flush(); // flushed
+```
+
+Also, you can specify an interval to automatically flush all buffers so logs
+don't get held in memory indefinitely.
 
 ``` js
 var logbuffer = require('log-buffer');
@@ -51,27 +59,70 @@ setInteval(function() {
 }, 5000); // flush every 5 seconds
 ```
 
+This will flush automatically at 8k of data as well as every 5 seconds.
+
 Benchmark
 ---------
 
-Counting to a million, logging each iteration, without buffering
+### Speed
 
-    $ time node examples/count.js > /dev/null
+Tested on a Joyent smartmachine in the Joyent Public Cloud
+(joyent_20120912T055050Z)
 
-    real    0m4.658s
-    user    0m4.406s
-    sys     0m0.337s
+Counting to a million, logging each iteration, piping to dd, without buffering
 
-Counting to a million, logging each iteration, with buffering (8k)
+    $ time node benchmark/count.js | dd > /dev/null
+    0+982421 records in
+    13454+1 records out
+    6888890 bytes (6.9 MB) copied, 19.0066 s, 362 kB/s
 
-    $ time node examples/bcount.js > /dev/null
+    real    0m19.111s
+    user    0m16.409s
+    sys     0m6.546s
 
-    real    0m1.903s
-    user    0m1.920s
-    sys     0m0.027s
+Counting to a million, logging each iteration, piping to dd, with buffering (8k)
+
+    $ time node benchmark/bcount.js | dd > /dev/null
+    13446+841 records in
+    13454+1 records out
+    6888890 bytes (6.9 MB) copied, 3.46552 s, 2.0 MB/s
+
+    real    0m3.495s
+    user    0m3.390s
+    sys     0m0.136s
 
 
-A **2.4x** increase
+A **5.5x** increase in speed with log buffering
+
+### syscalls
+
+Using DTrace(1M) we can see how many times the system was asked to write
+
+In the examples below, the output is redirected to `/dev/null` so we don't
+get a line printed for each iteration of the loop.  DTrace is then told to
+output to stderr so its data doesn't get sent to `/dev/null` as well.
+
+Counting to a million, logging each iteration to `/dev/null`, without buffering
+
+    $ dtrace -n 'syscall::write*:entry /pid == $target/ { @ = count(); }' -c 'node count.js' -o /dev/stderr > /dev/null
+    dtrace: description 'syscall::write*:entry ' matched 2 probes
+    dtrace: pid 33117 has exited
+
+              1000000
+
+Counting to a million, logging each iteration to `/dev/null`, with buffering (8k)
+
+    $ dtrace -n 'syscall::write*:entry /pid == $target/ { @ = count(); }' -c 'node bcount.js' -o /dev/stderr > /dev/null
+    dtrace: description 'syscall::write*:entry ' matched 2 probes
+    dtrace: pid 31513 has exited
+
+                  841
+
+1,000,000 write(2) syscalls are fired without buffering, whereas only 841 are fired
+when the output is buffered.
+
+A **1,189x*** decrease in the number of syscalls; 1 buffered syscall for every 1,189
+unbuffered syscalls.
 
 Install
 ------
