@@ -54,7 +54,7 @@ don't get held in memory indefinitely.
 
 ``` js
 var logbuffer = require('log-buffer');
-setInteval(function() {
+setInterval(function() {
   logbuffer.flush();
 }, 5000); // flush every 5 seconds
 ```
