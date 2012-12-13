@@ -11,7 +11,7 @@ module.exports.flush = flush;
 // save the original functions, and make a buffer for each
 ['warn', 'log', 'error', 'info'].forEach(function(name) {
   cache[name] = {
-    func: console[name],
+    func: console[name].bind(console),
     size: 0,
     buf: []
   };
