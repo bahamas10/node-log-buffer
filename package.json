@@ -1,7 +1,7 @@
 {
   "name": "log-buffer",
   "description": "Buffer calls to console.log, console.warn, etc. for high performance logging",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "Dave Eddy <dave@daveeddy.com> (http://www.daveeddy.com)",
   "contributors": [],
   "repository": {
