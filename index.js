@@ -1,3 +1,6 @@
+if (console._LOG_BUFFER) return;
+console._LOG_BUFFER = true;
+
 var util = require('util');
 
 var cache = {};
@@ -31,7 +34,7 @@ function patch(limit) {
   Object.keys(cache).forEach(function(name) {
     console[name] = function() {
       // format the input
-      var s = util.format.apply(this, arguments) + '\n';
+      var s = util.format.apply(this, arguments);
 
       // calculate the new length
       var len = Buffer.byteLength(s);
@@ -52,7 +55,7 @@ function flush() {
   Object.keys(cache).forEach(function(name) {
     // dump the buffer if present
     if (cache[name].size)
-      cache[name].func(cache[name].buf.join('').slice(0, -1));
+      cache[name].func(cache[name].buf.join('\n'));
 
     // clear the buffer
     cache[name].buf.length = 0;

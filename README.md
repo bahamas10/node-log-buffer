@@ -61,6 +61,8 @@ setInterval(function() {
 
 This will flush automatically at 8k of data as well as every 5 seconds.
 
+`console._LOG_BUFFER` is also defined when this module is included.
+
 Benchmark
 ---------
 
