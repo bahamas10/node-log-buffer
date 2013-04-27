@@ -7,6 +7,7 @@ var cache = {};
 
 // make sure to flush at exit
 process.on('exit', flush);
+
 // export the flush and patch functions
 module.exports = patch;
 module.exports.flush = flush;
@@ -27,7 +28,7 @@ patch();
  * Patch the console.* commands with the given
  * limit (default 8k)
  */
-function patch(limit) {
+function patch(limit, pre) {
   limit = limit || 8192; // 8kb
 
   // overwrite the console.* functions to buffer
@@ -35,6 +36,8 @@ function patch(limit) {
     console[name] = function() {
       // format the input
       var s = util.format.apply(this, arguments);
+      if (typeof pre === 'string') s = pre + s;
+      else if (typeof pre === 'function') s = pre() + s;
 
       // calculate the new length
       var len = Buffer.byteLength(s);

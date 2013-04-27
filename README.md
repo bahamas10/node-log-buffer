@@ -39,6 +39,20 @@ this:
 require('log-buffer')(4096); // buffer will flush at 4k
 ```
 
+You can specify a function or string to prefix all log statements
+
+```js
+require('log-buffer')(4096, 'MyLog: ');
+```
+
+All log statements will be prepended `MyLog: ` when flushed.
+
+``` js
+require('log-buffer')(4096, function() { return new Date().toISOString() + ': '; });
+```
+
+All log statements will be prepended by `2013-04-27T04:37:24.703Z: ` for example
+
 This module also exposes the `flush` function used to flush all buffers, so
 if you would like you can manually invoke a flush.
 
