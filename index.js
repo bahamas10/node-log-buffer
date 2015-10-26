@@ -58,7 +58,7 @@ function flush() {
   Object.keys(cache).forEach(function(name) {
     // dump the buffer if present
     if (cache[name].size)
-      cache[name].func(cache[name].buf.join('\n'));
+      cache[name].func(cache[name].buf.join('\n') + '\n');
 
     // clear the buffer
     cache[name].buf.length = 0;
